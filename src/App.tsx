@@ -246,6 +246,8 @@ function TopBar() {
   const tokens = useGame((s) => s.game.resources.tokens);
   const club = useGame((s) => s.game.clubName);
   const level = useGame((s) => clubLevelFor(s.game.resources.clubXp));
+  const settings = useGame((s) => s.game.settings);
+  const updateSettings = useGame((s) => s.updateSettings);
   return (
     <header className="topbar">
       <div>
@@ -256,6 +258,15 @@ function TopBar() {
         <span className="res" title="Moedas"><Coins aria-hidden="true" size={16} /> {fmt(coins)}</span>
         <span className="res" title="Gemas"><Gem aria-hidden="true" size={16} /> {fmt(gems)}</span>
         <span className="res" title="Fichas de treino"><Target aria-hidden="true" size={16} /> {tokens}</span>
+        <button
+          type="button"
+          className="lang-toggle"
+          onClick={() => updateSettings({ language: settings.language === 'pt' ? 'en' : 'pt' })}
+          aria-label="Alternar idioma"
+          title="Alternar idioma"
+        >
+          {settings.language === 'pt' ? 'PT' : 'EN'}
+        </button>
       </div>
     </header>
   );

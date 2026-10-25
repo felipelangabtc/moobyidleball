@@ -263,6 +263,22 @@ textarea {
   font-size: 0.9rem;
 }
 
+.lang-toggle {
+  background: var(--gold);
+  color: #111;
+  border: 0;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 0.85rem;
+  min-height: 2rem;
+}
+
+.lang-toggle:hover {
+  background: #ffe082;
+}
+
 .bottom-nav {
   position: fixed;
   left: 0;
