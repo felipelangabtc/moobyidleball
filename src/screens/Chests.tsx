@@ -80,7 +80,7 @@ export function Chests() {
           return (
             <Panel key={kind} title={config.name} eyebrow={`${config.rolls} sorteios`} id={`chest-${kind}`} className="chest-card" actions={<ChestArt kind={kind} size={44} />}>
               <p className="muted small">
-                Preço: <strong>{fmt(config.price)} Coins</strong> · Guardados: {stock}
+                Preço: <strong>{fmt(config.price)} Gems</strong> · Guardados: {stock}
               </p>
               <p className="small">
                 Coins: {fmt(config.coinsRange[0])}–{fmt(config.coinsRange[1])} · Fragments: {config.fragmentsRange[0]}–{config.fragmentsRange[1]}
@@ -95,10 +95,10 @@ export function Chests() {
                 ))}
               </ul>
               <div className="row wrap">
-                <Button variant="primary" icon={ShoppingBag} disabled={busy || game.resources.coins < config.price} onClick={() => run(kind, 1, 'shop')}>
+                <Button variant="primary" icon={ShoppingBag} disabled={busy || game.resources.gems < config.price} onClick={() => run(kind, 1, 'shop')}>
                   Comprar 1
                 </Button>
-                <Button disabled={busy || !batchUnlocked || game.resources.coins < config.price * 10} onClick={() => run(kind, 10, 'shop')}>
+                <Button disabled={busy || !batchUnlocked || game.resources.gems < config.price * 10} onClick={() => run(kind, 10, 'shop')}>
                   Comprar 10
                 </Button>
                 <Button icon={Package} disabled={busy || stock < 1} onClick={() => run(kind, 1, 'stock')}>

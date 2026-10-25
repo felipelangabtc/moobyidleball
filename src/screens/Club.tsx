@@ -5,6 +5,7 @@ import { useT } from '../i18n';
 import { useNav } from '../ui/nav';
 import { Bar, Button, EmptyState, Panel, Pill, RarityTag, Stat, Tabs, Tip } from '../ui/common';
 import { Portrait } from '../ui/art';
+import { itemIcon } from '../ui/itemIcon';
 import { CLUB_UPGRADES, ECONOMY, TRAINING } from '../domain/balance';
 import { CLUB_UPGRADE_IDS, ITEM_SLOTS, TRAINING_FOCUS_IDS, type ClubUpgradeId, type Item, type ItemSlot, type TrainingFocus } from '../domain/types';
 import { ATTR_LABEL, FOCUS_LABEL } from '../domain/labels';
@@ -197,6 +198,7 @@ function Equipment() {
             return (
               <li key={item.id} className="item-row" style={{ borderColor: RARITY_COLOR[item.rarity] }}>
                 <span className="item-dot" style={{ background: RARITY_COLOR[item.rarity] }} aria-hidden="true" />
+                {(() => { const Icon = itemIcon(item); return <Icon aria-hidden="true" size={20} style={{ color: RARITY_COLOR[item.rarity] }} />; })()}
                 <div className="grow">
                   <p className="strong">{itemName(item)} <span className="muted small">· {slotLabel(item.slot)} · nível {item.level}/{ECONOMY.maxItemLevel}</span></p>
                   <p className="small">{formatBonus(itemBonusAtLevel(item))}</p>

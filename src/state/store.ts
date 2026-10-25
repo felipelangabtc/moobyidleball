@@ -755,7 +755,7 @@ function openChests(get: () => GameStore, kind: ChestKind, count: number, source
     return { ok: false, error: 'Aberturas em lote s�o liberadas no n�vel 3 do clube.' };
   }
   const price = CHESTS[kind].price * count;
-  if (source === 'shop' && game.resources.coins < price) return { ok: false, error: `Faltam ${price - game.resources.coins} moedas.` };
+  if (source === 'shop' && game.resources.gems < price) return { ok: false, error: `Faltam ${price - game.resources.gems} gemas.` };
   if (source === 'stock' && game.chestStock[kind] < count) return { ok: false, error: 'Voc� n�o tem ba�s deste tipo guardados.' };
 
   const now = Date.now();
@@ -822,8 +822,8 @@ function openChests(get: () => GameStore, kind: ChestKind, count: number, source
     pity,
     resources: {
       ...game.resources,
-      coins: game.resources.coins - (source === 'shop' ? price : 0) + coins + recycledCoins,
-      gems: game.resources.gems + gems,
+      coins: game.resources.coins + coins + recycledCoins,
+      gems: game.resources.gems - (source === 'shop' ? price : 0) + gems,
       fragments: game.resources.fragments + fragments,
     },
     chestStock: source === 'stock' ? { ...game.chestStock, [kind]: game.chestStock[kind] - count } : game.chestStock,

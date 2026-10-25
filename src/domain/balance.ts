@@ -83,7 +83,7 @@ export const CHESTS: Record<ChestKind, ChestConfig> = {
   escola: {
     id: 'escola',
     name: 'Baú da Escolinha',
-    price: 250,
+    price: 100,
     rolls: 3,
     athleteChance: 0.6,
     itemChance: 0.4,
@@ -94,7 +94,7 @@ export const CHESTS: Record<ChestKind, ChestConfig> = {
   estadio: {
     id: 'estadio',
     name: 'Baú do Estádio',
-    price: 900,
+    price: 150,
     rolls: 4,
     athleteChance: 0.6,
     itemChance: 0.4,
@@ -105,7 +105,7 @@ export const CHESTS: Record<ChestKind, ChestConfig> = {
   ouro: {
     id: 'ouro',
     name: 'Baú de Ouro',
-    price: 2400,
+    price: 175,
     rolls: 5,
     athleteChance: 0.6,
     itemChance: 0.4,
