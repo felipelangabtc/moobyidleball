@@ -74,6 +74,7 @@ const MIGRATIONS: Migration[] = [
         settings: { ...DEFAULT_SETTINGS, ...settings, language: (settings.language as string) ?? 'pt' },
         records: raw.records ?? { bestWave: 0, maxStars: 1, maxLevel: 1 },
         openings: raw.openings ?? [],
+        marketplace: raw.marketplace ?? { listings: [], earnings: 0 },
         missions: { lossPayoutsToday: 0, challengeCoinsToday: 0, ...missions },
       };
     },

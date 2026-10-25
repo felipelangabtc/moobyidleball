@@ -271,6 +271,18 @@ export const gameStateSchema = z.object({
   settings: settingsSchema,
   lastMatch: matchRecordSchema.nullable(),
   nextId: z.number().int().min(1),
+  marketplace: z.object({
+    listings: z.array(z.object({
+      id: z.string().max(80),
+      kind: z.enum(['athlete', 'item']),
+      refId: z.string().max(80),
+      price: z.number().min(1).max(1e9),
+      listedAt: z.number(),
+      soldAt: z.number().nullable(),
+      buyer: z.string().nullable(),
+    })).max(100),
+    earnings: z.number().min(0),
+  }),
 });
 
 export type GameState = z.infer<typeof gameStateSchema>;
@@ -337,6 +349,7 @@ export function createInitialState(now: number, clubName = 'Clube Horizonte'): G
     settings: { ...DEFAULT_SETTINGS },
     lastMatch: null,
     nextId: 1,
+    marketplace: { listings: [], earnings: 0 },
   };
 }
 

@@ -1,7 +1,7 @@
-﻿/**
- * Store principal (Zustand). Cada ação valida as regras, aplica a mudança por
- * meio das funções de domínio e registra o resultado. A interface não altera
- * o estado diretamente; ela chama estas ações.
+/**
+ * Store principal (Zustand). Cada a��o valida as regras, aplica a mudan�a por
+ * meio das fun��es de dom�nio e registra o resultado. A interface n�o altera
+ * o estado diretamente; ela chama estas a��es.
  */
 import { create } from 'zustand';
 import { ECONOMY, LEVEL, CHESTS, CLUB_UPGRADES, FRAGMENTS_FROM_DUPLICATE } from '../domain/balance';
@@ -29,7 +29,7 @@ import { advanceMissions, missionById, missionDone, missionProgress, newlyUnlock
 import { isUnlocked } from '../domain/campaign';
 import { autoLineup, athleteDisplayName, validateLineup, type SquadContext } from '../domain/squad';
 import { createRng, hashString } from '../domain/rng';
-import { templateById } from '../data/athletes';
+import { ATHLETE_TEMPLATES, templateById } from '../data/athletes';
 import { ITEM_TEMPLATES } from '../data/items';
 import { ACHIEVEMENTS, type CounterKey } from '../data/goals';
 import { RARITY_NAME_PT } from '../domain/labels';
@@ -113,6 +113,12 @@ export interface GameStore {
   evolveAthlete: (athleteId: string) => ActionResult<number>;
   releaseAthlete: (athleteId: string) => ActionResult<number>;
 
+  listAthlete: (athleteId: string, price: number) => ActionResult<string>;
+  listItem: (itemId: string, price: number) => ActionResult<string>;
+  cancelListing: (listingId: string) => ActionResult;
+  collectMarketEarnings: () => ActionResult<number>;
+  buyMarketOffering: (offering: { id: string; kind: 'athlete' | 'item'; name: string; position?: string; slot?: string; rarity: 'common' | 'rare' | 'epic' | 'legend' | 'mythic'; hue: number; price: number }) => ActionResult;
+
   startMatch: (mode: MatchMode) => ActionResult<ResolvedMatch>;
   closeMatchView: () => void;
   setActivePhase: (phase: number) => ActionResult;
@@ -140,7 +146,7 @@ function templateRarity(templateId: string): Rarity {
   return templateById(templateId)?.rarity ?? 'common';
 }
 
-/** Remove referências órfãs (atletas, itens e escalação) após qualquer mudança. */
+/** Remove refer�ncias �rf�s (atletas, itens e escala��o) ap�s qualquer mudan�a. */
 export function pruneReferences(game: GameState): GameState {
   const athleteIds = new Set(game.athletes.map((a) => a.id));
   const itemIds = new Set(game.items.map((i) => i.id));
@@ -158,14 +164,14 @@ export function pruneReferences(game: GameState): GameState {
   return { ...game, equipped, lineup: { ...game.lineup, slots, captainId } };
 }
 
-/** Mantém a escalação válida quando a opção "escalação automática" está ligada. */
+/** Mant�m a escala��o v�lida quando a op��o "escala��o autom�tica" est� ligada. */
 function maintainLineup(game: GameState): GameState {
   if (!game.settings.autoLineup) return game;
   if (lineupProblems(game).length === 0) return game;
   return { ...game, lineup: autoLineup(game.lineup.formation, ctxOf(game), game.lineup.tactic) };
 }
 
-/** Aplica conquistas pendentes (ao final de cada ação que altera contadores). */
+/** Aplica conquistas pendentes (ao final de cada a��o que altera contadores). */
 function applyAchievements(game: GameState, now: number): { game: GameState; unlocked: string[] } {
   const unlocked = newlyUnlockedAchievements(game.counters, game.records, game.achievements);
   if (unlocked.length === 0) return { game, unlocked: [] };
@@ -194,7 +200,7 @@ function bump(game: GameState, counter: CounterKey, amount = 1): GameState {
   };
 }
 
-/** Elenco inicial: doze atletas comuns, equipamentos básicos e escalação automática. */
+/** Elenco inicial: doze atletas comuns, equipamentos b�sicos e escala��o autom�tica. */
 export function starterGame(game: GameState, now: number): GameState {
   const starterTemplates = ['nico-ferrolho', 'ivo-marabo', 'bento-lira', 'rafa-lusco', 'duda-ferrante', 'caio-mendes', 'teo-varginha', 'lucca-brandao', 'gael-sormani', 'yuri-tavares', 'iago-pacheco', 'enzo-quintela'];
   const rng = createRng(hashString(`starter:${now}`));
@@ -224,7 +230,7 @@ function athleteNameOf(game: GameState, id: string): string {
   return a ? athleteDisplayName(a) : 'Atleta';
 }
 
-/** Valores de atributo para dar sensação de progressão visível no primeiro uso (OVR médio). */
+/** Valores de atributo para dar sensa��o de progress�o vis�vel no primeiro uso (OVR m�dio). */
 export function squadOvr(game: GameState): number {
   const ids = game.lineup.slots.filter((s): s is string => Boolean(s));
   if (ids.length === 0) return 0;
@@ -304,7 +310,7 @@ export const useGame = create<GameStore>()((set, get) => {
 
     updateSettings(patch) {
       const parsed = settingsSchema.safeParse({ ...get().game.settings, ...patch });
-      if (!parsed.success) return { ok: false, error: 'Configuração inválida.' };
+      if (!parsed.success) return { ok: false, error: 'Configura��o inv�lida.' };
       write({ ...get().game, settings: parsed.data });
       return { ok: true };
     },
@@ -337,8 +343,8 @@ export const useGame = create<GameStore>()((set, get) => {
 
     setLineupSlot(index, athleteId) {
       const game = get().game;
-      if (index < 0 || index >= game.lineup.slots.length) return { ok: false, error: 'Posição inválida.' };
-      if (athleteId && !game.athletes.some((a) => a.id === athleteId)) return { ok: false, error: 'Atleta não encontrado.' };
+      if (index < 0 || index >= game.lineup.slots.length) return { ok: false, error: 'Posi��o inv�lida.' };
+      if (athleteId && !game.athletes.some((a) => a.id === athleteId)) return { ok: false, error: 'Atleta n�o encontrado.' };
       const slots = [...game.lineup.slots];
       const previous = athleteId ? slots.indexOf(athleteId) : -1;
       const displaced = slots[index] ?? null;
@@ -351,7 +357,7 @@ export const useGame = create<GameStore>()((set, get) => {
 
     setCaptain(athleteId) {
       const game = get().game;
-      if (athleteId && !game.lineup.slots.includes(athleteId)) return { ok: false, error: 'O capitão precisa estar na escalação.' };
+      if (athleteId && !game.lineup.slots.includes(athleteId)) return { ok: false, error: 'O capit�o precisa estar na escala��o.' };
       write({ ...game, lineup: { ...game.lineup, captainId: athleteId } });
       return { ok: true };
     },
@@ -373,9 +379,9 @@ export const useGame = create<GameStore>()((set, get) => {
     trainAthlete(athleteId, focus) {
       const game = get().game;
       const athlete = game.athletes.find((a) => a.id === athleteId);
-      if (!athlete) return { ok: false, error: 'Atleta não encontrado.' };
+      if (!athlete) return { ok: false, error: 'Atleta n�o encontrado.' };
       if (focus === 'keeper' && templateById(athlete.templateId)?.position !== 'GK') {
-        return { ok: false, error: 'O foco Goleiro só serve para goleiros.' };
+        return { ok: false, error: 'O foco Goleiro s� serve para goleiros.' };
       }
       const rng = createRng(hashString(`train:${athleteId}:${game.nextId}`));
       const result = trainAthlete(athlete, focus, rng, game.upgrades.trainingCenter, game.resources.coins, game.resources.tokens);
@@ -400,9 +406,9 @@ export const useGame = create<GameStore>()((set, get) => {
       const current = game.upgrades[id];
       const def = CLUB_UPGRADES[id];
       const cost = upgradeCost(id, current);
-      if (!cost) return { ok: false, error: `${def.name} já está no nível máximo.` };
+      if (!cost) return { ok: false, error: `${def.name} j� est� no n�vel m�ximo.` };
       if (clubLevelFor(game.resources.clubXp) < cost.requiredClubLevel) {
-        return { ok: false, error: `Requer nível ${cost.requiredClubLevel} do clube.` };
+        return { ok: false, error: `Requer n�vel ${cost.requiredClubLevel} do clube.` };
       }
       if (game.resources.coins < cost.coins) return { ok: false, error: `Faltam ${cost.coins - game.resources.coins} moedas.` };
       let next: GameState = {
@@ -413,7 +419,7 @@ export const useGame = create<GameStore>()((set, get) => {
       next = bump(next, 'upgrades', 1);
       const achieved = applyAchievements(next, Date.now());
       write(achieved.game);
-      get().toast(`${def.name} agora está no nível ${current + 1}.`, 'success');
+      get().toast(`${def.name} agora est� no n�vel ${current + 1}.`, 'success');
       return { ok: true };
     },
 
@@ -421,10 +427,10 @@ export const useGame = create<GameStore>()((set, get) => {
       const game = get().game;
       const athlete = game.athletes.find((a) => a.id === athleteId);
       const item = game.items.find((i) => i.id === itemId);
-      if (!athlete) return { ok: false, error: 'Atleta não encontrado.' };
-      if (!item) return { ok: false, error: 'Item não encontrado.' };
+      if (!athlete) return { ok: false, error: 'Atleta n�o encontrado.' };
+      if (!item) return { ok: false, error: 'Item n�o encontrado.' };
       if (item.slot === 'gloves' && templateById(athlete.templateId)?.position !== 'GK') {
-        return { ok: false, error: 'Luvas só podem ser equipadas por goleiros.' };
+        return { ok: false, error: 'Luvas s� podem ser equipadas por goleiros.' };
       }
       const res = equipItem(game.equipped, athleteId, item, game.items);
       if (res.error) return { ok: false, error: res.error };
@@ -447,14 +453,14 @@ export const useGame = create<GameStore>()((set, get) => {
       next = bump(next, 'fusions', 1);
       const achieved = applyAchievements(next, Date.now());
       write(achieved.game);
-      get().toast(`${itemName(fused.item)} agora está no nível ${fused.item.level}.`, 'success');
+      get().toast(`${itemName(fused.item)} agora est� no n�vel ${fused.item.level}.`, 'success');
       return { ok: true, data: fused.item };
     },
 
     recycleItem(itemId) {
       const game = get().game;
       const item = game.items.find((i) => i.id === itemId);
-      if (!item) return { ok: false, error: 'Item não encontrado.' };
+      if (!item) return { ok: false, error: 'Item n�o encontrado.' };
       const value = recycleValue(item);
       write(pruneReferences({
         ...game,
@@ -467,11 +473,11 @@ export const useGame = create<GameStore>()((set, get) => {
     evolveAthlete(athleteId) {
       const game = get().game;
       const athlete = game.athletes.find((a) => a.id === athleteId);
-      if (!athlete) return { ok: false, error: 'Atleta não encontrado.' };
+      if (!athlete) return { ok: false, error: 'Atleta n�o encontrado.' };
       const cost = starUpCost(athlete.stars);
-      if (cost === null) return { ok: false, error: 'Este atleta já tem 5 estrelas.' };
+      if (cost === null) return { ok: false, error: 'Este atleta j� tem 5 estrelas.' };
       if (!canStarUp(athlete, game.upgrades.trainingCenter)) {
-        return { ok: false, error: `Leve o atleta ao nível máximo atual (${levelCap(athlete.stars, game.upgrades.trainingCenter)}) para evoluir.` };
+        return { ok: false, error: `Leve o atleta ao n�vel m�ximo atual (${levelCap(athlete.stars, game.upgrades.trainingCenter)}) para evoluir.` };
       }
       if (game.resources.fragments < cost) return { ok: false, error: `Faltam ${cost - game.resources.fragments} fragmentos.` };
       const stars = athlete.stars + 1;
@@ -489,8 +495,8 @@ export const useGame = create<GameStore>()((set, get) => {
     releaseAthlete(athleteId) {
       const game = get().game;
       const athlete = game.athletes.find((a) => a.id === athleteId);
-      if (!athlete) return { ok: false, error: 'Atleta não encontrado.' };
-      if (game.lineup.slots.includes(athleteId)) return { ok: false, error: 'Tire o atleta da escalação antes de dispensá-lo.' };
+      if (!athlete) return { ok: false, error: 'Atleta n�o encontrado.' };
+      if (game.lineup.slots.includes(athleteId)) return { ok: false, error: 'Tire o atleta da escala��o antes de dispens�-lo.' };
       const fragments = FRAGMENTS_FROM_DUPLICATE[templateRarity(athlete.templateId)];
       write(pruneReferences({
         ...game,
@@ -500,10 +506,118 @@ export const useGame = create<GameStore>()((set, get) => {
       return { ok: true, data: fragments };
     },
 
+    listAthlete(athleteId, price) {
+      const game = get().game;
+      const athlete = game.athletes.find((a) => a.id === athleteId);
+      if (!athlete) return { ok: false, error: 'Atleta n�o encontrado.' };
+      if (game.lineup.slots.includes(athleteId)) return { ok: false, error: 'Tire o atleta da escala��o antes de anunciar.' };
+      if (!Number.isFinite(price) || price < 1) return { ok: false, error: 'Pre�o inv�lido.' };
+      const listing = { id: `mk-${game.nextId}`, kind: 'athlete' as const, refId: athleteId, price: Math.round(price), listedAt: Date.now(), soldAt: null, buyer: null };
+      write({
+        ...game,
+        athletes: game.athletes.filter((a) => a.id !== athleteId),
+        marketplace: { ...game.marketplace, listings: [listing, ...game.marketplace.listings] },
+        nextId: game.nextId + 1,
+      });
+      const rng = createRng(hashString(`market-sale:${game.nextId}`));
+      if (rng.chance(0.3 + clubLevelFor(game.resources.clubXp) * 0.05)) {
+        const g = get().game;
+        const idx = g.marketplace.listings.findIndex((l) => l.id === listing.id);
+        if (idx >= 0) {
+          const updated = [...g.marketplace.listings];
+          const cur = updated[idx];
+          if (cur) updated[idx] = { ...cur, soldAt: Date.now(), buyer: 'Comprador simulado' };
+          write({ ...g, marketplace: { listings: updated, earnings: g.marketplace.earnings + listing.price } });
+        }
+      }
+      return { ok: true, data: listing.id };
+    },
+
+    listItem(itemId, price) {
+      const game = get().game;
+      const item = game.items.find((i) => i.id === itemId);
+      if (!item) return { ok: false, error: 'Item n�o encontrado.' };
+      if (Object.values(game.equipped).some((s) => Object.values(s).includes(itemId))) {
+        return { ok: false, error: 'Desequipe o item antes de anunciar.' };
+      }
+      if (!Number.isFinite(price) || price < 1) return { ok: false, error: 'Pre�o inv�lido.' };
+      const listing = { id: `mk-${game.nextId}`, kind: 'item' as const, refId: itemId, price: Math.round(price), listedAt: Date.now(), soldAt: null, buyer: null };
+      write({
+        ...game,
+        items: game.items.filter((i) => i.id !== itemId),
+        marketplace: { ...game.marketplace, listings: [listing, ...game.marketplace.listings] },
+        nextId: game.nextId + 1,
+      });
+      const rng = createRng(hashString(`market-sale:${game.nextId}`));
+      if (rng.chance(0.4 + clubLevelFor(game.resources.clubXp) * 0.04)) {
+        const g = get().game;
+        const idx = g.marketplace.listings.findIndex((l) => l.id === listing.id);
+        if (idx >= 0) {
+          const updated = [...g.marketplace.listings];
+          const cur = updated[idx];
+          if (cur) updated[idx] = { ...cur, soldAt: Date.now(), buyer: 'Comprador simulado' };
+          write({ ...g, marketplace: { listings: updated, earnings: g.marketplace.earnings + listing.price } });
+        }
+      }
+      return { ok: true, data: listing.id };
+    },
+
+    cancelListing(listingId) {
+      const game = get().game;
+      const listing = game.marketplace.listings.find((l) => l.id === listingId);
+      if (!listing) return { ok: false, error: 'An�ncio n�o encontrado.' };
+      if (listing.soldAt) return { ok: false, error: 'Este an�ncio j� foi vendido.' };
+      const remaining = game.marketplace.listings.filter((l) => l.id !== listingId);
+      write({ ...game, marketplace: { ...game.marketplace, listings: remaining } });
+      return { ok: true };
+    },
+
+    collectMarketEarnings() {
+      const game = get().game;
+      const amount = game.marketplace.earnings;
+      if (amount <= 0) return { ok: false, error: 'Nenhum ganho para coletar.' };
+      write({
+        ...game,
+        resources: { ...game.resources, coins: game.resources.coins + amount },
+        marketplace: { ...game.marketplace, earnings: 0 },
+      });
+      return { ok: true, data: amount };
+    },
+
+    buyMarketOffering(offering) {
+      const game = get().game;
+      if (game.resources.coins < offering.price) return { ok: false, error: 'Moedas insuficientes.' };
+      let next: GameState = { ...game, resources: { ...game.resources, coins: game.resources.coins - offering.price } };
+      if (offering.kind === 'athlete') {
+        const template = ATHLETE_TEMPLATES.find((t) => t.name === offering.name);
+        if (template) {
+          const rng = createRng(hashString(`buy:${game.nextId}`));
+          const athlete = createAthlete(template.id, rng, Date.now());
+          next = { ...next, athletes: [...next.athletes, athlete], nextId: next.nextId + 1 };
+        }
+      } else {
+        const template = ITEM_TEMPLATES.find((t) => t.name === offering.name);
+        if (template) {
+          const item: Item = {
+            id: `itm-${Date.now().toString(36)}-${game.nextId}`,
+            templateId: template.id,
+            slot: template.slot,
+            rarity: template.rarity,
+            level: 1,
+            bonus: { ...template.bonus },
+            obtainedAt: Date.now(),
+          };
+          next = { ...next, items: [...next.items, item], nextId: next.nextId + 1 };
+        }
+      }
+      write(next);
+      return { ok: true };
+    },
+
     startMatch(mode) {
       const game = get().game;
       if (mode.kind === 'campaign' && !isUnlocked(game.campaign, mode.phase)) {
-        return { ok: false, error: 'Esta fase ainda não está desbloqueada.' };
+        return { ok: false, error: 'Esta fase ainda n�o est� desbloqueada.' };
       }
       if (mode.kind === 'challenge' && !game.challenge.active) {
         return { ok: false, error: 'Inicie o torneio antes de jogar uma onda.' };
@@ -547,9 +661,9 @@ export const useGame = create<GameStore>()((set, get) => {
     claimMission(id) {
       const game = get().game;
       const def = missionById(id);
-      if (!def) return { ok: false, error: 'Missão inválida.' };
-      if (game.missions.claimed[id]) return { ok: false, error: 'Recompensa já coletada.' };
-      if (!missionDone(game.missions, id)) return { ok: false, error: 'Missão ainda não concluída.' };
+      if (!def) return { ok: false, error: 'Miss�o inv�lida.' };
+      if (game.missions.claimed[id]) return { ok: false, error: 'Recompensa j� coletada.' };
+      if (!missionDone(game.missions, id)) return { ok: false, error: 'Miss�o ainda n�o conclu�da.' };
       const r = def.reward;
       let next: GameState = {
         ...game,
@@ -565,7 +679,7 @@ export const useGame = create<GameStore>()((set, get) => {
       next = bump(next, 'missionsDone', 1);
       const achieved = applyAchievements(next, Date.now());
       write(achieved.game);
-      get().toast(`Missão concluída: ${def.title}`, 'success');
+      get().toast(`Miss�o conclu�da: ${def.title}`, 'success');
       return { ok: true, data: { coins: r.coins } };
     },
 
@@ -585,8 +699,8 @@ export const useGame = create<GameStore>()((set, get) => {
       const game = get().game;
       if (summary.coins === 0 && summary.clubXp === 0 && summary.tokens === 0) {
         const error = summary.reason === 'clock-rewind'
-          ? 'O relógio do dispositivo foi alterado. A receita foi reiniciada a partir de agora.'
-          : 'Ainda não há receita para coletar.';
+          ? 'O rel�gio do dispositivo foi alterado. A receita foi reiniciada a partir de agora.'
+          : 'Ainda n�o h� receita para coletar.';
         if (summary.reason === 'clock-rewind') {
           write({ ...game, idle: { ...game.idle, lastCollectedAt: now } });
         }
@@ -625,7 +739,7 @@ export const useGame = create<GameStore>()((set, get) => {
       try {
         localStorage.removeItem(SAVE_KEY);
       } catch {
-        // Sem acesso ao armazenamento: a memória ainda é reiniciada.
+        // Sem acesso ao armazenamento: a mem�ria ainda � reiniciada.
       }
       set({ game: starterGame(createInitialState(Date.now()), Date.now()), activeMatch: null, loadMessage: null });
     },
@@ -634,13 +748,13 @@ export const useGame = create<GameStore>()((set, get) => {
 
 function openChests(get: () => GameStore, kind: ChestKind, count: number, source: 'shop' | 'stock'): ActionResult<ChestOpenSummary> {
   const game = get().game;
-  if (!Number.isInteger(count) || count < 1 || count > 10) return { ok: false, error: 'Escolha de 1 a 10 baús.' };
+  if (!Number.isInteger(count) || count < 1 || count > 10) return { ok: false, error: 'Escolha de 1 a 10 ba�s.' };
   if (count > 1 && clubLevelFor(game.resources.clubXp) < 3) {
-    return { ok: false, error: 'Aberturas em lote são liberadas no nível 3 do clube.' };
+    return { ok: false, error: 'Aberturas em lote s�o liberadas no n�vel 3 do clube.' };
   }
   const price = CHESTS[kind].price * count;
   if (source === 'shop' && game.resources.coins < price) return { ok: false, error: `Faltam ${price - game.resources.coins} moedas.` };
-  if (source === 'stock' && game.chestStock[kind] < count) return { ok: false, error: 'Você não tem baús deste tipo guardados.' };
+  if (source === 'stock' && game.chestStock[kind] < count) return { ok: false, error: 'Voc� n�o tem ba�s deste tipo guardados.' };
 
   const now = Date.now();
   let pity = { ...game.pity };
@@ -691,7 +805,7 @@ function openChests(get: () => GameStore, kind: ChestKind, count: number, source
     if (game.items.length + keptItems.length >= capacity) recycledCoins += recycleValue(item);
     else keptItems.push(item);
   }
-  if (recycledCoins > 0) warnings.push(`Inventário cheio: ${recycledCoins} moedas recebidas por itens reciclados.`);
+  if (recycledCoins > 0) warnings.push(`Invent�rio cheio: ${recycledCoins} moedas recebidas por itens reciclados.`);
   const inventoryNote = inventoryWarning(game.items.length + keptItems.length, capacity);
   if (inventoryNote) warnings.push(inventoryNote);
 
