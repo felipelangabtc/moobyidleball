@@ -52,7 +52,7 @@ export function MatchPrep() {
   if (!unlocked) {
     return (
       <div className="screen">
-        <p>Esta fase ainda está bloqueada.</p>
+        <p>Esta Phase ainda está Locked.</p>
         <Button onClick={() => go('campaign')}>Voltar ao mapa</Button>
       </div>
     );
@@ -85,8 +85,8 @@ export function MatchPrep() {
             </div>
           </div>
           <dl className="kv">
-            <div><dt>Regra</dt><dd>{info.requiresWinner ? 'Vitória obrigatória (prorrogação e pênaltis)' : 'Empate permitido'}</dd></div>
-            <div><dt>Arena</dt><dd>{plan.arena === 'ricochet' ? 'Estádio de placas (física de ricochete nos chutes)' : 'Campo tradicional'}</dd></div>
+            <div><dt>Rule</dt><dd>{info.requiresWinner ? 'Vitória obrigatória (prorrogação e pênaltis)' : 'Draw permitido'}</dd></div>
+            <div><dt>Arena</dt><dd>{plan.arena === 'ricochet' ? 'Estádio de placas (física de ricochete nos chutes)' : 'Traditional field'}</dd></div>
             <div><dt>Seu OVR médio</dt><dd>{ourOvr || '—'}</dd></div>
           </dl>
         </Panel>
@@ -95,8 +95,8 @@ export function MatchPrep() {
           <p className="muted small">Quanto mais forte o Your team, maior a chance de vitória. Esta é uma estimativa: cada partida real tem variações.</p>
           <div className="estimate" role="group" aria-label="Chances estimadas">
             <EstimateRow label="Vitória" value={estimate.win} color="var(--ok)" />
-            {!info.requiresWinner ? <EstimateRow label="Empate" value={estimate.draw} color="var(--gold)" /> : null}
-            <EstimateRow label="Derrota" value={estimate.loss} color="var(--danger)" />
+            {!info.requiresWinner ? <EstimateRow label="Draw" value={estimate.draw} color="var(--gold)" /> : null}
+            <EstimateRow label="Defeat" value={estimate.loss} color="var(--danger)" />
           </div>
           <p className="muted small">Gols médios: {estimate.averageGoalsFor.toLocaleString('pt-BR')} marcados · {estimate.averageGoalsAgainst.toLocaleString('pt-BR')} sofridos.</p>
         </Panel>
@@ -125,14 +125,14 @@ export function MatchPrep() {
           <Button icon={Users} variant="secondary" onClick={() => go('squad')}>Editar escalação e capitão</Button>
         </Panel>
 
-        <Panel title="Recompensas" eyebrow="Previsão" id="prep-rewards">
+        <Panel title="Rewards" eyebrow="Previsão" id="prep-rewards">
           <ul className="list-plain">
-            <li><strong>Vitória:</strong> {fmt(rewards.win.coins)} Coins · {fmt(rewards.win.clubXp)} XP · {rewards.win.tokens} fichas · {rewards.win.fragments} Fragments</li>
-            {!info.requiresWinner ? <li><strong>Empate:</strong> {fmt(rewards.draw.coins)} Coins (sem avanço)</li> : null}
-            <li><strong>Derrota:</strong> {fmt(rewards.loss.coins)} Coins de consolação · volta uma fase</li>
+            <li><strong>Vitória:</strong> {fmt(rewards.win.coins)} Coins · {fmt(rewards.win.clubXp)} XP · {rewards.win.tokens} tokens · {rewards.win.fragments} Fragments</li>
+            {!info.requiresWinner ? <li><strong>Draw:</strong> {fmt(rewards.draw.coins)} Coins (sem avanço)</li> : null}
+            <li><strong>Defeat:</strong> {fmt(rewards.loss.coins)} Coins de consolação · go back one phase</li>
           </ul>
           {won === 0 ? (
-            <p className="alert-soft">Primeira vitória nesta fase: inclui {CHEST_NAME_PT[rewards.win.chest ?? seasonChest]}.</p>
+            <p className="alert-soft">Primeira vitória nesta Phase: inclui {CHEST_NAME_PT[rewards.win.chest ?? seasonChest]}.</p>
           ) : (
             <p className="muted small">Vitórias repetidas rendem {Math.round(rewards.win.repeatFactor * 100)}% da recompensa cheia.</p>
           )}

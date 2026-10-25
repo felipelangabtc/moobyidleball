@@ -26,7 +26,7 @@ export function Stats() {
         </div>
       </header>
       <Tip topic="stats" title="Seu histórico">
-        Números vitalícios do Club. O histórico mostra as últimas partidas; a Campaign e o torneio têm metas próprias por temporada.
+        Números vitalícios do Club. O histórico mostra as últimas partidas; a Campaign e o Tournament têm metas próprias por temporada.
       </Tip>
 
       <div className="grid-stats">
@@ -37,16 +37,16 @@ export function Stats() {
         <Stat label="Club" value={`Nível ${level}`} hint={`${fmt(game.resources.clubXp)} XP`} />
         <Stat label="Baús abertos" value={fmt(c.chests)} hint={`${c.legendPulls} lendário(s) · ${c.mythicPulls} mítico(s)`} />
         <Stat label="Atletas obtidos" value={fmt(c.athletes)} hint={`Squad atual: ${game.athletes.length}`} />
-        <Stat label="Melhor onda" value={game.records.bestWave} hint="Torneio de sobrevivência" />
+        <Stat label="Melhor Wave" value={game.records.bestWave} hint="Tournament de sobrevivência" />
       </div>
 
       <div className="grid-2">
         <Panel title="Campaign" eyebrow={seasonLabel(info.seasonIndex)} id="campaign-stats">
           <dl className="kv">
-            <div><dt>Fase ativa</dt><dd>{game.campaign.activePhase}</dd></div>
-            <div><dt>Maior fase vencida</dt><dd>{game.campaign.highestCleared}</dd></div>
-            <div><dt>Fases com alguma vitória</dt><dd>{cleared}</dd></div>
-            <div><dt>Chefes vencidos</dt><dd>{c.bosses}</dd></div>
+            <div><dt>Phase ativa</dt><dd>{game.campaign.activePhase}</dd></div>
+            <div><dt>Maior Phase Cleared</dt><dd>{game.campaign.highestCleared}</dd></div>
+            <div><dt>Phases com alguma vitória</dt><dd>{cleared}</dd></div>
+            <div><dt>Bosss vencidos</dt><dd>{c.bosses}</dd></div>
           </dl>
           <h3 className="section-title">Metas desta temporada</h3>
           <ul className="list-plain small">
@@ -54,7 +54,7 @@ export function Stats() {
               <li key={g.id}>{g.title}: {Math.min(seasonGoalProgress(seasonProgress, g), g.target)}/{g.target} {seasonProgress.claimed.includes(g.id) ? '✓' : ''}</li>
             ))}
           </ul>
-          <p className="muted small">Mini-chefes a cada {CAMPAIGN.miniEvery} fases; chefes a cada {CAMPAIGN.bossEvery}.</p>
+          <p className="muted small">Mini-Bosss a cada {CAMPAIGN.miniEvery} Phases; Bosss a cada {CAMPAIGN.bossEvery}.</p>
         </Panel>
 
         <Panel title="Histórico recente" eyebrow="Últimas partidas" id="history" actions={<History aria-hidden="true" size={18} />}>

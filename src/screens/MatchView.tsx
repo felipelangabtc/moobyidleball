@@ -46,7 +46,7 @@ export function MatchView() {
     return (
       <div className="screen">
         <EmptyState title="Nenhuma partida para mostrar" icon={Trophy}>
-          <p>Escolha uma fase no mapa e inicie a partida.</p>
+          <p>Escolha uma Phase no mapa e inicie a partida.</p>
           <Button variant="primary" onClick={() => go('campaign')}>Ir para a Campaign</Button>
         </EmptyState>
       </div>
@@ -64,7 +64,7 @@ function fromActive(active: ActiveMatch): ViewData {
     id: resolved.record.id,
     report: resolved.report as MatchReport,
     title,
-    subtitle: info ? `${info.biome.name} · ${kindLabel(info.kind)}` : 'Torneio de sobrevivência',
+    subtitle: info ? `${info.biome.name} · ${kindLabel(info.kind)}` : 'Tournament de sobrevivência',
     arena: resolved.report.arena,
     grass: info ? info.biome.grass : ['#3f7d2c', '#4d9236'],
     rewards: {
@@ -92,8 +92,8 @@ function fromRecord(record: any): ViewData {
   return {
     id: record.id,
     report: record.report as MatchReport,
-    title: record.mode === 'campaign' ? `Fase ${record.phase}` : `Torneio · onda ${record.phase}`,
-    subtitle: info ? `${info.biome.name} · ${kindLabel(info.kind)}` : 'Torneio de sobrevivência',
+    title: record.mode === 'campaign' ? `Phase ${record.phase}` : `Tournament · Wave ${record.phase}`,
+    subtitle: info ? `${info.biome.name} · ${kindLabel(info.kind)}` : 'Tournament de sobrevivência',
     arena: record.report.arena,
     grass: info ? info.biome.grass : ['#3f7d2c', '#4d9236'],
     rewards: {
@@ -227,12 +227,12 @@ function Playback({ data }: { data: ViewData }) {
     if (last) SOUND_FOR[last.kind]?.();
   }, [visibleEvents, phase, data.live, reduced]);
 
-  // Modo automático: continua a Campaign após vitória; derrota pausa o automático.
+  // Modo automático: continua a Campaign após vitória; Defeat pausa o automático.
   useEffect(() => {
     if (!finished || !data.live) return;
     if (data.rewards.outcome === 'loss' && settings.autoPlay) {
       updateSettings({ autoPlay: false });
-      toast('Modo automático pausado após a derrota.', 'warning');
+      toast('Modo automático pausado após a Defeat.', 'warning');
       return;
     }
     if (settings.autoPlay && data.mode === 'campaign' && data.rewards.outcome === 'win') {
@@ -271,7 +271,7 @@ function Playback({ data }: { data: ViewData }) {
           <p className="eyebrow">{data.subtitle}</p>
           <h1>{data.title}</h1>
         </div>
-        <Pill>{data.arena === 'ricochet' ? 'Arena de placas' : 'Campo tradicional'}</Pill>
+        <Pill>{data.arena === 'ricochet' ? 'Arena de placas' : 'Traditional field'}</Pill>
       </header>
 
       <section className="scoreboard" aria-label="Placar">
@@ -352,7 +352,7 @@ function Playback({ data }: { data: ViewData }) {
             const game = useGame.getState().game;
             const nextPhase = data.phase + 1;
             if (!isUnlocked(game.campaign, nextPhase)) {
-              toast('A próxima fase ainda não está desbloqueada.', 'warning');
+              toast('A próxima Phase ainda não está desLocked.', 'warning');
               go('campaign');
               return;
             }
@@ -366,7 +366,7 @@ function Playback({ data }: { data: ViewData }) {
             }
           } else if (action === 'next-wave') {
             const res = startMatch({ kind: 'challenge' });
-            if (!res.ok) toast(res.error ?? 'Não foi possível iniciar a onda.', 'warning');
+            if (!res.ok) toast(res.error ?? 'Não foi possível iniciar a Wave.', 'warning');
           } else if (action === 'new-run') {
             startChallenge();
             setCampaignTab('torneio');
@@ -405,7 +405,7 @@ interface ResultProps {
 }
 
 function ResultSummary({ data, report, finalScore, onNext }: ResultProps) {
-  const outcomeText = data.rewards.outcome === 'win' ? 'Vitória' : data.rewards.outcome === 'draw' ? 'Empate' : 'Derrota';
+  const outcomeText = data.rewards.outcome === 'win' ? 'Vitória' : data.rewards.outcome === 'draw' ? 'Draw' : 'Defeat';
   const outcomeTone = data.rewards.outcome === 'win' ? 'var(--ok)' : data.rewards.outcome === 'draw' ? 'var(--gold)' : 'var(--danger)';
   const allPlayers = useMemo(() => {
     const rows: Array<{ id: string; name: string; side: MatchSide; stat: PlayerMatchStat }> = [];
@@ -441,7 +441,7 @@ function ResultSummary({ data, report, finalScore, onNext }: ResultProps) {
       </div>
 
       <div className="grid-2">
-        <Panel title="Recompensas" eyebrow="Recebidas" id="rewards">
+        <Panel title="Rewards" eyebrow="Recebidas" id="rewards">
           <ul className="list-plain">
             <li>{fmt(data.rewards.coins)} Coins</li>
             <li>{fmt(data.rewards.clubXp)} XP de Club</li>
@@ -450,7 +450,7 @@ function ResultSummary({ data, report, finalScore, onNext }: ResultProps) {
             {data.rewards.chest ? <li>Baú recebido: {data.rewards.chest}</li> : null}
             {data.rewards.itemName ? <li>Item encontrado: {data.rewards.itemName}</li> : null}
             {data.rewards.levelUps > 0 ? <li>{plural(data.rewards.levelUps, 'nível subido', 'níveis subidos')} entre atletas</li> : null}
-            {data.rewards.achievements > 0 ? <li>{plural(data.rewards.achievements, 'conquista desbloqueada', 'Achievements desbloqueadas')}</li> : null}
+            {data.rewards.achievements > 0 ? <li>{plural(data.rewards.achievements, 'conquista desLocked', 'Achievements desLockeds')}</li> : null}
             {data.rewards.injuries > 0 ? <li>{plural(data.rewards.injuries, 'lesão', 'lesões')} no Your team</li> : null}
           </ul>
           {data.notes.length > 0 ? (
@@ -478,16 +478,16 @@ function ResultSummary({ data, report, finalScore, onNext }: ResultProps) {
       </div>
 
       <div className="result-actions" role="group" aria-label="Próximos passos">
-        {canNext ? <Button variant="primary" onClick={() => onNext('next')}>Próxima fase</Button> : null}
-        {isCampaign && data.rewards.outcome !== 'win' ? <Button variant="primary" onClick={() => onNext('rematch')}>Revanche (fase {data.phase})</Button> : null}
+        {canNext ? <Button variant="primary" onClick={() => onNext('next')}>Próxima Phase</Button> : null}
+        {isCampaign && data.rewards.outcome !== 'win' ? <Button variant="primary" onClick={() => onNext('rematch')}>Revanche (Phase {data.phase})</Button> : null}
         {isCampaign && data.rewards.outcome === 'draw' ? <Button onClick={() => onNext('rematch')}>Jogar de novo</Button> : null}
-        {!isCampaign && data.rewards.outcome === 'win' ? <Button variant="primary" onClick={() => onNext('next-wave')}>Próxima onda</Button> : null}
-        {!isCampaign && data.rewards.outcome !== 'win' ? <Button variant="primary" onClick={() => onNext('new-run')}>Novo torneio</Button> : null}
+        {!isCampaign && data.rewards.outcome === 'win' ? <Button variant="primary" onClick={() => onNext('next-wave')}>Próxima Wave</Button> : null}
+        {!isCampaign && data.rewards.outcome !== 'win' ? <Button variant="primary" onClick={() => onNext('new-run')}>Novo Tournament</Button> : null}
         <Button icon={Users} onClick={() => onNext('squad')}>Voltar à escalação</Button>
         <Button icon={FastForward} onClick={() => onNext('map')}>Mapa</Button>
       </div>
       {data.rewards.outcome === 'loss' && isCampaign ? (
-        <p className="muted small">Após a derrota você voltou uma fase. Melhore o Squad e tente a revanche quando estiver pronto.</p>
+        <p className="muted small">Após a Defeat você voltou uma Phase. Melhore o Squad e tente a revanche quando estiver pronto.</p>
       ) : null}
       <p className="muted small"><BallIcon size={12} /> Partida resolvida: a animação apenas mostra o que já aconteceu.</p>
     </section>

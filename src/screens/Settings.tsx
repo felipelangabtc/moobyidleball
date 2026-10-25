@@ -75,7 +75,7 @@ export function Settings() {
         <Panel title="Automação" eyebrow="Modo idle" id="automation">
           <Toggle id="auto-lineup" label="Escalação automática" description="Preenche vagas vazias quando um atleta fica indisponível." checked={settings.autoLineup} onChange={(v) => update({ autoLineup: v })} />
           <Toggle id="auto-collect" label="Collect income ao abrir" description="Recolhe automaticamente a Idle income acumulada." checked={settings.autoCollect} onChange={(v) => update({ autoCollect: v })} />
-          <Toggle id="auto-play" label="Jogar fases automaticamente" description="Após vitórias na Campaign, começa a próxima fase sozinho. Uma derrota desliga esta opção." checked={settings.autoPlay} onChange={(v) => update({ autoPlay: v })} />
+          <Toggle id="auto-play" label="Jogar Phases automaticamente" description="Após vitórias na Campaign, começa a próxima Phase sozinho. Uma Defeat desliga esta opção." checked={settings.autoPlay} onChange={(v) => update({ autoPlay: v })} />
         </Panel>
 
         <Panel title="Dicas" eyebrow="Tutoriais" id="tips">
@@ -155,9 +155,9 @@ export function Settings() {
         <Panel title="Segurança e limites" eyebrow="Transparência" id="security">
           <ul className="list-plain small">
             <li>Modo exclusivamente local: não há conta, login, servidor, pagamentos nem multiplayer.</li>
-            <li>O save tem checksum para detectar corrupção. Quem controla o navegador pode editar o save, por isso o sorteio e as recompensas não são garantidos contra fraude.</li>
-            <li>Recompensas offline são limitadas por horas e nunca avançam fases.</li>
-            <li>Consolações de derrota têm limite diário.</li>
+            <li>O save tem checksum para detectar corrupção. Quem controla o navegador pode editar o save, por isso o sorteio e as Rewards não são garantidos contra fraude.</li>
+            <li>Rewards offline são limitadas por horas e nunca avançam Phases.</li>
+            <li>Consolações de Defeat têm limite diário.</li>
             <li>Nenhum dado pessoal é coletado. Nenhuma requisição externa é feita.</li>
           </ul>
         </Panel>

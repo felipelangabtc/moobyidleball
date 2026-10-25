@@ -97,14 +97,14 @@ export function Home() {
       </section>
 
       <Tip topic="home" title="Bem-vindo ao seu Club">
-        Monte a escalação, prepare o time e acompanhe as partidas. Vitórias liberam novas fases; derrotas fazem você voltar uma fase, sem perder Squad nem items.
+        Monte a escalação, prepare o time e acompanhe as partidas. Vitórias liberam novas Phases; Defeats fazem você voltar uma Phase, sem perder Squad nem items.
       </Tip>
 
       <div className="grid-stats" role="list" aria-label={t('res.coins')}>
         <Stat label={t('res.coins')} value={fmt(game.resources.coins)} icon={Coins} hint={`+${fmt(selectors.idleRate(game))}/h`} tone="#ffc23a" />
         <Stat label={t('res.clubXp')} value={level} icon={Medal} hint={`${fmt(game.resources.clubXp)} XP`} tone="#4fc3f7" />
         <Stat label={t('res.tokens')} value={game.resources.tokens} icon={Target} hint={t('home.tokensHint')} tone="#81c784" />
-        <Stat label={t('res.fragments')} value={fmt(game.resources.fragments)} icon={Recycle} hint={t('home.fragmentsHint')} tone="#c084fc" />
+        <Stat label={t('res.fragments')} value={fmt(game.resources.fragments)} icon={Recycle} hint={t('home.FragmentsHint')} tone="#c084fc" />
       </div>
 
       <div className="grid-2">

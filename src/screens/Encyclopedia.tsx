@@ -64,7 +64,7 @@ function Opponents() {
           ))}
         </ul>
       )}
-      <p className="muted small">{seen.length} Clubs registrados. Cada fase traz um novo adversário gerado de forma determinística.</p>
+      <p className="muted small">{seen.length} Clubs registrados. Cada Phase traz um novo adversário gerado de forma determinística.</p>
     </div>
   );
 }
@@ -124,7 +124,7 @@ function Seasons() {
   return (
     <div className="stack">
       <Tip topic="seasons" title="Temporadas e biomas">
-        Cada bioma é uma temporada com {CAMPAIGN.phasesPerBiome} fases. Ao vencer o chefe, o próximo bioma abre, com visual e adversários próprios.
+        Cada bioma é uma temporada com {CAMPAIGN.phasesPerBiome} Phases. Ao vencer o Boss, o próximo bioma abre, com visual e adversários próprios.
       </Tip>
       <div className="season-grid">
         {BIOMES.map((b, index) => {
@@ -135,7 +135,7 @@ function Seasons() {
               <p className="muted small">{b.subtitle}</p>
               <p className="small">Estádio: {b.stadium} · Baú típico: {b.chest}</p>
               <div className="biome-swatch" style={{ background: `linear-gradient(90deg, ${b.grass[0]}, ${b.grass[1]})` }} aria-hidden="true" />
-              {unlocked ? <Pill>Desbloqueada</Pill> : <Pill>Bloqueada · fase {firstPhase}</Pill>}
+              {unlocked ? <Pill>DesLocked</Pill> : <Pill>Locked · Phase {firstPhase}</Pill>}
             </Panel>
           );
         })}

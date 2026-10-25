@@ -26,7 +26,7 @@ export function Missions() {
       </header>
 
       <Tip topic="missions" title="Missões e Achievements">
-        Missões diárias e semanais acompanham ações reais (partidas, gols, baús). Achievements são permanentes. Recompensas são coletadas manualmente, sem espera.
+        Missões diárias e semanais acompanham ações reais (partidas, gols, baús). Achievements são permanentes. Rewards são coletadas manualmente, sem espera.
       </Tip>
 
       <div className="grid-2">
@@ -56,7 +56,7 @@ export function Missions() {
                   <p className="muted small">{a.description}</p>
                   <Bar value={value} max={target} label={a.title} color={unlockedAt ? 'var(--ok)' : 'var(--accent)'} />
                   <p className="small">
-                    {unlockedAt ? `Desbloqueada em ${dateLabel(unlockedAt)}` : `${value}/${target}`} · recompensa {fmt(a.reward)} Coins
+                    {unlockedAt ? `DesLocked em ${dateLabel(unlockedAt)}` : `${value}/${target}`} · recompensa {fmt(a.reward)} Coins
                   </p>
                 </div>
               </li>
@@ -64,7 +64,7 @@ export function Missions() {
           })}
         </ul>
       </Panel>
-      <p className="muted small"><Trophy aria-hidden="true" size={12} /> Recompensas de Achievements são creditadas automaticamente no momento em que são desbloqueadas.</p>
+      <p className="muted small"><Trophy aria-hidden="true" size={12} /> Rewards de Achievements são creditadas automaticamente no momento em que são desLockeds.</p>
     </div>
   );
 }
@@ -80,7 +80,7 @@ function MissionPanel({ title, eyebrow, ids, defs, onClaim }: { title: string; e
           const status = selectors.missionStatus(game, id);
           const rewardText = [
             def.reward.coins ? `${fmt(def.reward.coins)} Coins` : null,
-            def.reward.tokens ? `${def.reward.tokens} fichas` : null,
+            def.reward.tokens ? `${def.reward.tokens} tokens` : null,
             def.reward.fragments ? `${def.reward.fragments} Fragments` : null,
             def.reward.clubXp ? `${def.reward.clubXp} XP` : null,
           ].filter(Boolean).join(' · ');

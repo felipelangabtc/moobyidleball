@@ -180,7 +180,7 @@ function Details({ athleteId }: { athleteId: string }) {
               Treinar ({fmt(cost)} · 1 ficha)
             </Button>
           </div>
-          <p className="muted small">Fichas disponíveis: {game.resources.tokens} · Coins: {fmt(game.resources.coins)}</p>
+          <p className="muted small">tokens disponíveis: {game.resources.tokens} · Coins: {fmt(game.resources.coins)}</p>
 
           <SectionTitle icon={ArrowUpCircle}>Evolução</SectionTitle>
           {nextStarCost === null ? (

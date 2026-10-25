@@ -425,14 +425,14 @@ function ClubInfo() {
         >
           Collect income
         </Button>
-        <p className="muted small">A Idle income nunca avança fases, nunca declara vitórias e nunca concede atletas.</p>
+        <p className="muted small">A Idle income nunca avança Phases, nunca declara vitórias e nunca concede atletas.</p>
       </Panel>
 
       <Panel title="Recursos e limites" eyebrow="Economia" id="economy">
         <ul className="list-plain small">
           <li>Coins: partidas, baús, missões, Achievements, idle e reciclagem.</li>
           <li>XP de Club: partidas, missões e coleta idle. Libera Upgrades.</li>
-          <li>Training tokens: vitórias, empates, derrotas e missões.</li>
+          <li>Training tokens: vitórias, Draws, Defeats e missões.</li>
           <li>Fragments: baús (duplicatas), vitórias e missões. Evoluem estrelas.</li>
           <li>items: {game.items.length} de {inventoryCapacity(game.upgrades.storage)} espaços. Atletas: {game.athletes.length} de {ECONOMY.rosterCap}.</li>
         </ul>
