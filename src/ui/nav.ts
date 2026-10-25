@@ -9,6 +9,7 @@ export type Screen =
   | 'chests'
   | 'club'
   | 'marketplace'
+  | 'online'
   | 'missions'
   | 'encyclopedia'
   | 'stats'
@@ -23,6 +24,7 @@ export const SCREEN_LABEL: Record<Screen, string> = {
   chests: 'Baús',
   club: 'Clube',
   marketplace: 'Mercado',
+  online: 'Online',
   missions: 'Missões',
   encyclopedia: 'Enciclopédia',
   stats: 'Estatísticas',

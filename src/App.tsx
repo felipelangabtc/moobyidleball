@@ -8,6 +8,7 @@ import {
   Map as MapIcon,
   Settings as SettingsIcon,
   Store,
+  Swords,
   Target,
   Users,
   Wrench,
@@ -35,6 +36,7 @@ import { Squad } from './screens/Squad';
 import { Chests } from './screens/Chests';
 import { Club } from './screens/Club';
 import { Marketplace } from './screens/Marketplace';
+import { Online } from './screens/Online';
 import { Missions } from './screens/Missions';
 import { Encyclopedia } from './screens/Encyclopedia';
 import { Stats } from './screens/Stats';
@@ -51,6 +53,7 @@ const PRIMARY_NAV: Array<{ id: Screen; icon: typeof HomeIcon }> = [
 ];
 
 const SECONDARY_NAV: Array<{ id: Screen; icon: typeof HomeIcon }> = [
+  { id: 'online', icon: Swords },
   { id: 'marketplace', icon: Store },
   { id: 'missions', icon: ClipboardList },
   { id: 'encyclopedia', icon: BookOpen },
@@ -139,6 +142,8 @@ function ScreenSwitch({ screen }: { screen: Screen }) {
       return <Club />;
     case 'marketplace':
       return <Marketplace />;
+    case 'online':
+      return <Online />;
     case 'missions':
       return <Missions />;
     case 'encyclopedia':
