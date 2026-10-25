@@ -90,6 +90,7 @@ export type MatchOutcome = 'win' | 'draw' | 'loss';
 
 export interface PhaseRewards {
   coins: number;
+  gems: number;
   clubXp: number;
   tokens: number;
   fragments: number;
@@ -114,8 +115,10 @@ export function phaseRewards(info: PhaseInfo, outcome: MatchOutcome, timesWonBef
 
   if (outcome === 'win') {
     const coins = Math.round(base * kindMult * repeat);
+    const gems = info.kind === 'boss' ? (firstWin ? 3 : 1) : (firstWin && info.number % 12 === 0 ? 2 : 0);
     return {
       coins,
+      gems,
       clubXp: Math.round((25 + 4 * info.number) * repeat),
       tokens: 3,
       fragments: firstWin ? 10 + info.number : Math.round(2 * repeat),
@@ -129,6 +132,7 @@ export function phaseRewards(info: PhaseInfo, outcome: MatchOutcome, timesWonBef
   if (outcome === 'draw') {
     return {
       coins: Math.round(base * kindMult * CAMPAIGN.drawRewardFactor * repeat),
+      gems: 0,
       clubXp: Math.round(12 + 2 * info.number),
       tokens: 2,
       fragments: 0,
@@ -141,6 +145,7 @@ export function phaseRewards(info: PhaseInfo, outcome: MatchOutcome, timesWonBef
   }
   return {
     coins: Math.max(CAMPAIGN.lossRewardMin, Math.round(base * CAMPAIGN.lossRewardFactor)),
+    gems: 0,
     clubXp: 8,
     tokens: 1,
     fragments: 0,

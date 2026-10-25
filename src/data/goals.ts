@@ -37,7 +37,7 @@ export interface MissionDef {
   description: string;
   counter: CounterKey;
   target: number;
-  reward: { coins: number; tokens?: number; fragments?: number; clubXp?: number };
+  reward: { coins: number; gems?: number; tokens?: number; fragments?: number; clubXp?: number };
 }
 
 export const DAILY_MISSIONS: MissionDef[] = [

@@ -134,6 +134,7 @@ export const TRAINING = {
 
 export const ECONOMY = {
   startCoins: 800,
+  startGems: 5,
   startTokens: 6,
   startFragments: 0,
   startClubXp: 0,

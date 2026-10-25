@@ -195,6 +195,7 @@ export function applyMatchResult(state: GameState, plan: MatchPlan, report: Matc
   const fragmentsGained = Math.round(rewards.fragments * upgradeEffects.youthFragmentMultiplier(youth))
     + (outcome === 'win' ? upgradeEffects.youthFragmentsPerWin(youth) : 0);
   next.resources.coins += coinsGained;
+  next.resources.gems += rewards.gems;
   next.resources.clubXp += rewards.clubXp;
   next.resources.tokens += rewards.tokens;
   next.resources.fragments += fragmentsGained;
@@ -263,6 +264,7 @@ export function applyMatchResult(state: GameState, plan: MatchPlan, report: Matc
     outcome,
     score: report.score,
     coins: coinsGained,
+    gems: rewards.gems,
     clubXp: rewards.clubXp,
     tokens: rewards.tokens,
     fragments: fragmentsGained,
@@ -321,6 +323,7 @@ function challengeRewards(state: GameState, wave: number, outcome: MatchOutcome)
     const capLeft = Math.max(0, CHALLENGE.coinsDailyCap - state.missions.challengeCoinsToday);
     return {
       coins: Math.min(perWave, capLeft),
+      gems: wave % 5 === 0 ? 1 : 0,
       clubXp: 10 + wave,
       tokens: 2,
       fragments: 2 * wave,
@@ -333,6 +336,7 @@ function challengeRewards(state: GameState, wave: number, outcome: MatchOutcome)
   }
   return {
     coins: 0,
+    gems: 0,
     clubXp: 6,
     tokens: 1,
     fragments: 0,

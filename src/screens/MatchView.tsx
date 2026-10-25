@@ -23,7 +23,7 @@ interface ViewData {
   subtitle: string;
   arena: ArenaId;
   grass: [string, string];
-  rewards: { coins: number; clubXp: number; tokens: number; fragments: number; chest: string | null; itemName: string | null; achievements: number; levelUps: number; injuries: number; outcome: 'win' | 'draw' | 'loss' };
+  rewards: { coins: number; gems: number; clubXp: number; tokens: number; fragments: number; chest: string | null; itemName: string | null; achievements: number; levelUps: number; injuries: number; outcome: 'win' | 'draw' | 'loss' };
   notes: string[];
   mode: 'campaign' | 'challenge';
   phase: number;
@@ -69,6 +69,7 @@ function fromActive(active: ActiveMatch): ViewData {
     grass: info ? info.biome.grass : ['#3f7d2c', '#4d9236'],
     rewards: {
       coins: resolved.record.coins,
+      gems: resolved.record.gems,
       clubXp: resolved.record.clubXp,
       tokens: resolved.record.tokens,
       fragments: resolved.record.fragments,
@@ -98,6 +99,7 @@ function fromRecord(record: any): ViewData {
     grass: info ? info.biome.grass : ['#3f7d2c', '#4d9236'],
     rewards: {
       coins: record.coins,
+      gems: record.gems,
       clubXp: record.clubXp,
       tokens: record.tokens,
       fragments: record.fragments,
@@ -444,6 +446,7 @@ function ResultSummary({ data, report, finalScore, onNext }: ResultProps) {
         <Panel title="Rewards" eyebrow="Recebidas" id="rewards">
           <ul className="list-plain">
             <li>{fmt(data.rewards.coins)} Coins</li>
+            <li>{fmt(data.rewards.gems)} Gems</li>
             <li>{fmt(data.rewards.clubXp)} XP de Club</li>
             <li>{data.rewards.tokens} Training tokens</li>
             <li>{data.rewards.fragments} Fragments</li>

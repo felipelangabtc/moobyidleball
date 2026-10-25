@@ -60,6 +60,7 @@ export interface ChestOpenSummary {
   count: number;
   rolls: ChestRollView[];
   coins: number;
+  gems: number;
   fragments: number;
   pityBefore: PityState;
   pityAfter: PityState;
@@ -669,6 +670,7 @@ export const useGame = create<GameStore>()((set, get) => {
         ...game,
         resources: {
           coins: game.resources.coins + r.coins,
+          gems: game.resources.gems + (r.gems ?? 0),
           clubXp: game.resources.clubXp + (r.clubXp ?? 0),
           tokens: game.resources.tokens + (r.tokens ?? 0),
           fragments: game.resources.fragments + (r.fragments ?? 0),
@@ -762,6 +764,7 @@ function openChests(get: () => GameStore, kind: ChestKind, count: number, source
   const owned = new Set(game.athletes.map((a) => a.templateId));
   const ctx = { ownedTemplates: owned, nextId: game.nextId, now, rng: createRng(hashString(`chest:${game.nextId}:${now}`)) };
   let coins = 0;
+  let gems = 0;
   let fragments = 0;
   const newAthletes: Athlete[] = [];
   const newItems: Item[] = [];
@@ -772,6 +775,7 @@ function openChests(get: () => GameStore, kind: ChestKind, count: number, source
     const result = openChest(kind, pity, ctx);
     pity = result.pity;
     coins += result.coins;
+    gems += result.gems;
     fragments += result.fragments;
     for (const roll of result.rolls) {
       const name = roll.kind === 'athlete'
@@ -819,6 +823,7 @@ function openChests(get: () => GameStore, kind: ChestKind, count: number, source
     resources: {
       ...game.resources,
       coins: game.resources.coins - (source === 'shop' ? price : 0) + coins + recycledCoins,
+      gems: game.resources.gems + gems,
       fragments: game.resources.fragments + fragments,
     },
     chestStock: source === 'stock' ? { ...game.chestStock, [kind]: game.chestStock[kind] - count } : game.chestStock,
@@ -861,6 +866,7 @@ function openChests(get: () => GameStore, kind: ChestKind, count: number, source
       count,
       rolls,
       coins,
+      gems,
       fragments,
       pityBefore,
       pityAfter: pity,

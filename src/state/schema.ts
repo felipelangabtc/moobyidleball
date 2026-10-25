@@ -153,6 +153,7 @@ export const matchRecordSchema = z.object({
   outcome: z.enum(['win', 'draw', 'loss']),
   score: z.tuple([z.number().int().min(0), z.number().int().min(0)]),
   coins: z.number().min(0),
+  gems: z.number().min(0),
   clubXp: z.number().min(0),
   tokens: z.number().min(0),
   fragments: z.number().min(0),
@@ -197,6 +198,7 @@ export const gameStateSchema = z.object({
   lastSeenAt: z.number(),
   resources: z.object({
     coins: z.number().min(0).max(1e12),
+    gems: z.number().min(0).max(1e9),
     clubXp: z.number().min(0).max(1e12),
     tokens: z.number().min(0).max(1e9),
     fragments: z.number().min(0).max(1e12),
@@ -323,6 +325,7 @@ export function createInitialState(now: number, clubName = 'Clube Horizonte'): G
     lastSeenAt: now,
     resources: {
       coins: ECONOMY.startCoins,
+      gems: ECONOMY.startGems,
       clubXp: ECONOMY.startClubXp,
       tokens: ECONOMY.startTokens,
       fragments: ECONOMY.startFragments,

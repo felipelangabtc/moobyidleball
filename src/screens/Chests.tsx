@@ -256,7 +256,7 @@ function OpenModal({ summary, onClose }: { summary: ChestOpenSummary | null; onC
         <div className="opening">
           <p className="small">
             {summary.count > 1 ? `${summary.count} baús abertos. ` : ''}
-            Coins: +{fmt(summary.coins)} · Fragments: +{fmt(summary.fragments)}
+            Coins: +{fmt(summary.coins)} · Gems: +{fmt(summary.gems)} · Fragments: +{fmt(summary.fragments)}
           </p>
           {summary.warnings.length > 0 ? (
             <ul className="problems small">{summary.warnings.map((w) => <li key={w}>{w}</li>)}</ul>

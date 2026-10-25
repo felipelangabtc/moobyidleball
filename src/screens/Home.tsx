@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Activity, ArrowRight, BarChart3, Coins, Gift, Medal, Play, Recycle, Swords, Target, Trophy, Wrench } from 'lucide-react';
+import { Activity, ArrowRight, BarChart3, Coins, Gem, Gift, Medal, Play, Recycle, Swords, Target, Trophy, Wrench } from 'lucide-react';
 import { useGame, selectors, squadOvr, outcomeLabel } from '../state/store';
 import { useT } from '../i18n';
 import { useNav } from '../ui/nav';
@@ -102,9 +102,10 @@ export function Home() {
 
       <div className="grid-stats" role="list" aria-label={t('res.coins')}>
         <Stat label={t('res.coins')} value={fmt(game.resources.coins)} icon={Coins} hint={`+${fmt(selectors.idleRate(game))}/h`} tone="#ffc23a" />
+        <Stat label="Gemas" value={fmt(game.resources.gems)} icon={Gem} hint="Moeda rara" tone="#c084fc" />
         <Stat label={t('res.clubXp')} value={level} icon={Medal} hint={`${fmt(game.resources.clubXp)} XP`} tone="#4fc3f7" />
         <Stat label={t('res.tokens')} value={game.resources.tokens} icon={Target} hint={t('home.tokensHint')} tone="#81c784" />
-        <Stat label={t('res.fragments')} value={fmt(game.resources.fragments)} icon={Recycle} hint={t('home.FragmentsHint')} tone="#c084fc" />
+        <Stat label={t('res.fragments')} value={fmt(game.resources.fragments)} icon={Recycle} hint={t('home.fragmentsHint')} tone="#c084fc" />
       </div>
 
       <div className="grid-2">

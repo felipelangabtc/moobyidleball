@@ -15,6 +15,7 @@ import {
   X,
   Coins,
   ClipboardList,
+  Gem,
 } from 'lucide-react';
 import { useGame } from './state/store';
 import { I18nProvider, useT } from './i18n';
@@ -241,6 +242,7 @@ function NavItem({ id, icon: Icon, active, onSelect }: { id: Screen; icon: typeo
 
 function TopBar() {
   const coins = useGame((s) => s.game.resources.coins);
+  const gems = useGame((s) => s.game.resources.gems);
   const tokens = useGame((s) => s.game.resources.tokens);
   const club = useGame((s) => s.game.clubName);
   const level = useGame((s) => clubLevelFor(s.game.resources.clubXp));
@@ -252,6 +254,7 @@ function TopBar() {
       </div>
       <div className="topbar-res" aria-label="Recursos">
         <span className="res" title="Moedas"><Coins aria-hidden="true" size={16} /> {fmt(coins)}</span>
+        <span className="res" title="Gemas"><Gem aria-hidden="true" size={16} /> {fmt(gems)}</span>
         <span className="res" title="Fichas de treino"><Target aria-hidden="true" size={16} /> {tokens}</span>
       </div>
     </header>

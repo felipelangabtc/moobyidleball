@@ -37,6 +37,7 @@ export interface ChestOpenResult {
   kind: ChestKind;
   rolls: ChestRoll[];
   coins: number;
+  gems: number;
   fragments: number;
   pity: PityState;
 }
@@ -195,9 +196,10 @@ export function openChest(kind: ChestKind, pity: PityState, ctx: OpenContext): C
   }
 
   const coins = rng.int(config.coinsRange[0], config.coinsRange[1]);
+  const gems = rng.chance(0.15) ? rng.int(1, 3) : 0;
   const fragments = rng.int(config.fragmentsRange[0], config.fragmentsRange[1]) + rolls.reduce((sum, r) => sum + r.duplicateFragments, 0);
 
-  return { kind, rolls, coins, fragments, pity: state };
+  return { kind, rolls, coins, gems, fragments, pity: state };
 }
 
 export function advancePity(pity: PityState, rarity: Rarity): PityState {

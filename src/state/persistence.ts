@@ -68,10 +68,12 @@ const MIGRATIONS: Migration[] = [
     run: (raw) => {
       const settings = (raw.settings ?? {}) as Record<string, unknown>;
       const missions = (raw.missions ?? {}) as Record<string, unknown>;
+      const resources = (raw.resources ?? {}) as Record<string, unknown>;
       return {
         ...raw,
         version: 2,
         settings: { ...DEFAULT_SETTINGS, ...settings, language: (settings.language as string) ?? 'pt' },
+        resources: { coins: 800, gems: 5, clubXp: 0, tokens: 6, fragments: 0, ...resources },
         records: raw.records ?? { bestWave: 0, maxStars: 1, maxLevel: 1 },
         openings: raw.openings ?? [],
         marketplace: raw.marketplace ?? { listings: [], earnings: 0 },
